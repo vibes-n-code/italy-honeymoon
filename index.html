@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nick & Lizzy's Italy Honeymoon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --warm: #f5f0e8;
+      --cream: #faf8f4;
+      --terracotta: #c4764e;
+      --terracotta-light: #d4956e;
+      --olive: #6b7c5e;
+      --olive-light: #8a9d7a;
+      --navy: #2c3e50;
+      --gold: #c9a96e;
+      --gold-light: #e0c88a;
+      --text: #3a3530;
+      --text-light: #6b645c;
+      --shadow: rgba(60, 50, 40, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=1800&q=80') center/cover no-repeat;
+      filter: brightness(0.4);
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .hero-pre {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 0.8rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.3s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 400;
+      line-height: 1.1;
+      color: white;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.5s forwards;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+    }
+
+    .hero-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 400;
+      color: rgba(255,255,255,0.8);
+      margin-top: 0.5rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.7s forwards;
+    }
+
+    .hero-dates {
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.7);
+      border-top: 1px solid rgba(201, 169, 110, 0.5);
+      border-bottom: 1px solid rgba(201, 169, 110, 0.5);
+      padding: 0.75rem 2rem;
+      display: inline-block;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.9s forwards;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 1s ease 1.2s forwards;
+    }
+
+    .hero-scroll a {
+      color: var(--gold-light);
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    .hero-scroll .arrow {
+      width: 1px;
+      height: 40px;
+      background: var(--gold-light);
+      animation: bounce 2s ease infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: scaleY(1); opacity: 1; }
+      50% { transform: scaleY(0.6); opacity: 0.5; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Navigation */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250, 248, 244, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+      padding: 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 0;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .nav-inner > a {
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.9rem 1.5rem;
+      white-space: nowrap;
+      transition: color 0.3s, border-color 0.3s;
+      border-bottom: 2px solid transparent;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .nav-inner > a:hover {
+      color: var(--navy);
+      border-bottom-color: var(--navy);
+    }
+
+    .nav-inner > a.active {
+      color: var(--navy);
+      border-bottom-color: var(--navy);
+    }
+
+    .nav-divider {
+      width: 1.5px;
+      background: rgba(201, 169, 110, 0.4);
+      margin: 0.45rem 0.5rem;
+      border-radius: 1px;
+    }
+
+    .nav-group-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      align-self: center;
+      padding: 0 0.25rem 0 0.5rem;
+      font-weight: 500;
+    }
+
+    /* Flow bar */
+    .flow-bar {
+      background: var(--navy);
+      color: rgba(255,255,255,0.85);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .flow-bar h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+      color: var(--gold-light);
+    }
+
+    .flow-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .flow-step {
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      white-space: nowrap;
+    }
+
+    .flow-arrow { color: var(--gold); font-size: 0.9rem; }
+
+    /* Photo banners */
+    .photo-banner {
+      width: 100%;
+      height: 50vh;
+      min-height: 300px;
+      max-height: 500px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .photo-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-banner .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(250, 248, 244, 0.8) 100%);
+    }
+
+    /* Photo grid */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .photo-grid img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .photo-grid.three img:first-child {
+      grid-row: 1 / 3;
+      height: 100%;
+    }
+
+    .photo-single {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .photo-single img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Stop sections */
+    .stop {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .stop.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stop-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .stop-number {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 0.75rem;
+    }
+
+    .stop-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 400;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .stop-meta {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .stop-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .divider {
+      width: 50px;
+      height: 1px;
+      background: var(--gold);
+      margin: 2rem auto;
+    }
+
+    /* Hotel info card */
+    .hotel-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 20px var(--shadow);
+      border: 1px solid rgba(201, 169, 110, 0.15);
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    .hotel-card .hotel-info { flex: 1; }
+
+    .hotel-card .hotel-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+    }
+
+    .hotel-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.75rem;
+    }
+
+    .hotel-details {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      line-height: 1.8;
+    }
+
+    .hotel-details a {
+      color: var(--terracotta);
+      text-decoration: none;
+    }
+
+    .hotel-details a:hover {
+      text-decoration: underline;
+    }
+
+    .hotel-detail-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: baseline;
+    }
+
+    .hotel-detail-label {
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      min-width: 55px;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 20px var(--shadow);
+      border: 1px solid rgba(201, 169, 110, 0.1);
+    }
+
+    .card-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+    }
+
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.75rem;
+    }
+
+    .card p, .card li {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      line-height: 1.8;
+    }
+
+    .card ul { list-style: none; padding: 0; }
+
+    .card ul li {
+      padding-left: 1.2rem;
+      position: relative;
+      margin-bottom: 0.3rem;
+    }
+
+    .card ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.7em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    /* Day timeline */
+    .day-timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .day-timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--gold), var(--gold-light), transparent);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 0.5rem;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--cream);
+      transform: translateX(-4px);
+    }
+
+    .timeline-time {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+
+    .timeline-item h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.4rem;
+    }
+
+    .timeline-item p {
+      font-size: 0.88rem;
+      color: var(--text-light);
+    }
+
+    /* Note boxes */
+    .note-box {
+      background: linear-gradient(135deg, rgba(196, 118, 78, 0.06) 0%, rgba(201, 169, 110, 0.06) 100%);
+      border-left: 3px solid var(--terracotta);
+      border-radius: 0 8px 8px 0;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .note-box strong {
+      color: var(--terracotta);
+      font-weight: 500;
+    }
+
+    /* Travel inline card */
+    .travel-inline {
+      background: linear-gradient(135deg, var(--navy) 0%, #3d5266 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .travel-inline .card-label { color: var(--gold-light); }
+    .travel-inline h3 { color: white; font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .travel-inline p, .travel-inline li { color: rgba(255,255,255,0.8); font-size: 0.88rem; line-height: 1.8; }
+    .travel-inline ul { list-style: none; padding: 0; }
+    .travel-inline ul li { padding-left: 1.2rem; position: relative; margin-bottom: 0.3rem; }
+    .travel-inline ul li::before { content: ''; position: absolute; left: 0; top: 0.7em; width: 5px; height: 5px; border-radius: 50%; background: var(--gold-light); }
+    .travel-inline .note-box { background: rgba(255,255,255,0.08); border-left-color: var(--gold-light); color: rgba(255,255,255,0.8); }
+    .travel-inline .note-box strong { color: var(--gold-light); }
+
+    /* Optional tag */
+    .optional-tag {
+      display: inline-block;
+      background: rgba(107, 124, 94, 0.1);
+      color: var(--olive);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Region header */
+    .region-header {
+      text-align: center;
+      padding: 4rem 2rem 1rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .region-header .region-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 0.75rem;
+    }
+
+    .region-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 3.5rem);
+      font-weight: 400;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .region-header .region-dates {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .region-divider {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      margin: 1.5rem auto;
+    }
+
+    /* Sub-stop within a region */
+    .sub-stop {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .sub-stop.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .sub-stop .stop-header {
+      margin-bottom: 2rem;
+    }
+
+    .sub-stop .stop-header h2 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+    }
+
+    .sub-divider {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .sub-divider hr {
+      border: none;
+      border-top: 1px solid rgba(201, 169, 110, 0.2);
+    }
+
+    /* Highlights grid */
+    .highlights {
+      background: var(--warm);
+      padding: 5rem 2rem;
+    }
+
+    .highlights-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .highlights h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--navy);
+      margin-bottom: 2.5rem;
+    }
+
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .highlight-item {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem 1rem;
+      box-shadow: 0 2px 15px var(--shadow);
+      transition: transform 0.3s ease;
+    }
+
+    .highlight-item:hover { transform: translateY(-3px); }
+    .highlight-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .highlight-item p { font-size: 0.85rem; color: var(--text-light); }
+
+    /* Reminders */
+    .reminders {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 2rem 5rem;
+    }
+
+    .reminders h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--navy);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .reminder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .reminder-item {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 15px var(--shadow);
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .reminder-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .reminder-item p { font-size: 0.85rem; color: var(--text-light); }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--navy);
+      color: rgba(255,255,255,0.5);
+    }
+
+    footer .names {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+    }
+
+    footer p { font-size: 0.8rem; letter-spacing: 0.1em; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .stop { padding: 3rem 1.25rem; }
+      .card, .hotel-card { padding: 1.5rem; }
+      .hotel-card { flex-direction: column; gap: 0; }
+      .nav-inner > a { padding: 0.75rem 0.7rem; font-size: 0.58rem; letter-spacing: 0.08em; }
+      .nav-divider { margin: 0.5rem 0.1rem; }
+      .nav-group-label { display: none; }
+      .flow-steps { gap: 0.3rem; }
+      .flow-step { font-size: 0.7rem; padding: 0.3rem 0.7rem; }
+      .photo-grid img { height: 150px; }
+      .photo-banner { height: 35vh; min-height: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-pre">A honeymoon in</p>
+      <h1><em>Italy</em></h1>
+      <p class="hero-names">Nick & Lizzy</p>
+      <div class="hero-dates">June 30 &mdash; July 11, 2026</div>
+    </div>
+    <div class="hero-scroll">
+      <a href="#flow">
+        <span>Explore</span>
+        <span class="arrow"></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#ischia" class="nav-section-link active">Ischia</a>
+      <a href="#venice" class="nav-section-link">Venice</a>
+      <a href="#dolomites" class="nav-section-link">Dolomites</a>
+      <div class="nav-divider"></div>
+      <a href="map.html">Map</a>
+      <a href="shopping.html">Shopping</a>
+      <a href="restaurants.html">Restaurants</a>
+    </div>
+  </nav>
+
+
+  <!-- Flow -->
+  <section class="flow-bar" id="flow">
+    <h2>The Journey</h2>
+    <div class="flow-steps">
+      <span class="flow-step">Relax &middot; Ischia</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Culture &middot; Venice</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Adventure &amp; Recovery &middot; Dolomites</span>
+    </div>
+  </section>
+
+  <!-- ==================== ISCHIA ==================== -->
+  <div class="photo-banner">
+    <img src="https://images.unsplash.com/photo-1696524274200-121b343055bf?w=1600&q=80" alt="Ischia island">
+    <div class="overlay"></div>
+  </div>
+
+  <section class="stop" id="ischia">
+    <div class="stop-header">
+      <p class="stop-number">Stop 1</p>
+      <h2>Ischia</h2>
+      <div class="divider"></div>
+      <div class="stop-meta">
+        <span>June 30 &ndash; July 4</span>
+        <span>4 nights</span>
+      </div>
+    </div>
+
+    <!-- Hotel info -->
+    <div class="hotel-card">
+      <div class="hotel-info">
+        <div class="hotel-label">Your Stay</div>
+        <h3>San Montano Resort & Spa</h3>
+        <div class="hotel-details">
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Address</span> Via Nuova Montevico 26, 80076 Lacco Ameno, Ischia (NA)</div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Phone</span> <a href="tel:+390819940033">+39 081 994 0033</a></div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Email</span> <a href="mailto:info@sanmontano.com">info@sanmontano.com</a></div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Web</span> <a href="https://www.sanmontano.com" target="_blank">sanmontano.com</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="photo-grid">
+      <img src="https://images.unsplash.com/photo-1696524274269-465dea8e3ff9?w=800&q=80" alt="Ischia coast">
+      <img src="https://images.unsplash.com/photo-1696524274273-fa6b79cc6029?w=800&q=80" alt="Ischia bay">
+    </div>
+
+    <!-- TUESDAY JUNE 30 -->
+    <div class="card">
+      <div class="card-label">Tuesday, June 30 &middot; Arrival</div>
+      <h3>Arrive & Decompress</h3>
+      <p>Arrive in Naples, take the ferry across to Ischia, and let the honeymoon begin. Check in at San Montano, change into something comfortable, and head straight to the pool.</p>
+      <div class="day-timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">Afternoon</div>
+          <h4>Pool & Settle In</h4>
+          <p>Decompress at the San Montano infinity pools overlooking the bay. No rush, no plan. Just arrive.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Evening</div>
+          <h4>Dinner at the Hotel</h4>
+          <p>Keep it easy tonight &mdash; dinner at the hotel restaurant. You just got here.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEDNESDAY JULY 1 -->
+    <div class="card">
+      <div class="card-label">Wednesday, July 1 &middot; Scooter Day</div>
+      <h3>Beach Club, Forio & Bar Franco</h3>
+      <div class="day-timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">Morning</div>
+          <h4>Leisurely Start</h4>
+          <p>Sleep in. Slow breakfast at the hotel. No alarm.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Midday</div>
+          <h4>Scooter to La Scannella Beach Club</h4>
+          <p>Rent a scooter and ride down to <strong>La Scannella</strong> in Panza &mdash; a beach club tucked into the southern coast. Swim, sun, and soak it in.</p>
+          <div class="note-box" style="margin-top: 0.5rem;">
+            <strong>La Scannella:</strong> Via Scannella Mare, 1, Panza (Forio) &middot; <a href="http://www.clubscannella.it/" target="_blank" style="color: var(--terracotta);">clubscannella.it</a>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Late Afternoon</div>
+          <h4>Back to Hotel & Change</h4>
+          <p>Scooter back to San Montano, shower, and get dressed up.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Evening</div>
+          <h4>Night Out in Forio</h4>
+          <p>Head to Forio for your going-out night. Dinner and drinks at <strong>Bar Franco</strong> on Via Roma in Lacco Ameno &mdash; lively, fun, and the right energy for the evening.</p>
+          <div class="note-box" style="margin-top: 0.5rem;">
+            <strong>Bar Franco:</strong> Via Roma, 94, Lacco Ameno
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THURSDAY JULY 2 -->
+    <div class="card">
+      <div class="card-label">Thursday, July 2 &middot; Full Island Day</div>
+      <h3>Wine, Shopping, Hot Springs & a Castle</h3>
+      <p>The big explore day. Traveling by taxi only (smart &mdash; you'll be wine tasting).</p>
+      <div class="day-timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">Morning</div>
+          <h4>Breakfast & Cantina Raustella</h4>
+          <p>Relaxed breakfast at the hotel, then taxi to <strong>Cantina Raustella</strong> for a wine tasting. A small family vineyard in Serrara Fontana with incredible views and local wines.</p>
+          <div class="note-box" style="margin-top: 0.5rem;">
+            <strong>Cantina Raustella:</strong> Via Lorenzo Fiore 49d, Serrara Fontana &middot; <a href="https://www.cantinaraustella.com/" target="_blank" style="color: var(--terracotta);">cantinaraustella.com</a>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Midday</div>
+          <h4>Sant'Angelo Shopping</h4>
+          <p>Taxi down to the picturesque fishing village of Sant'Angelo for shopping. Hit <strong>Le Signorine</strong> (unique accessories) and <strong>Il Pirata Ceramiche</strong> (handmade ceramics &mdash; ask for Cristiano). Both are on the <a href="shopping.html" style="color: var(--terracotta);">shopping guide</a>.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Afternoon</div>
+          <h4>Sorgeto Bay</h4>
+          <p>Natural hot spring pools right where the volcanic thermal water meets the sea. Bring a towel and a drink &mdash; wade between hot and cold pools carved into the rocks. One of Ischia's most unique experiences.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Evening</div>
+          <h4>Aragonese Castle & Ischia Ponte Dinner</h4>
+          <p>Taxi to the eastern side of the island. Explore the dramatic <strong>Castello Aragonese</strong> (open until sunset), then walk into the charming <strong>Ischia Ponte</strong> neighborhood for dinner with views of the castle lit up at night.</p>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>Transport:</strong> All taxis today. No driving after wine tasting.
+      </div>
+    </div>
+
+    <!-- FRIDAY JULY 3 -->
+    <div class="card">
+      <div class="card-label">Friday, July 3 &middot; Boat Day</div>
+      <h3>Private Boat Tour of Ischia</h3>
+      <div class="day-timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">Morning</div>
+          <h4>Slow Start</h4>
+          <p>Relaxed breakfast at the hotel. No rush &mdash; the boat will wait.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Boat Tour</div>
+          <h4>The Route</h4>
+          <p>A half-day private boat tour around the island &mdash; crystal-clear water, hidden bays, and snorkeling. Prosecco included.</p>
+          <ul>
+            <li>Castello Aragonese (pass by)</li>
+            <li>La Scarrupata &mdash; pristine bay + Green Grotto snorkeling</li>
+            <li>Sant'Angelo fishing village (pass by)</li>
+            <li>Sorgeto thermal springs &mdash; natural hot water pools</li>
+            <li>Spiaggia di Citara &mdash; turquoise water swim</li>
+            <li>Chiesa del Soccorso (pass by)</li>
+            <li>Fungo di Lacco Ameno &mdash; famous mushroom rock</li>
+          </ul>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">What's Included</div>
+          <h4>On Board</h4>
+          <ul>
+            <li>Snorkeling gear, beach towels, shower</li>
+            <li>Water, sodas, beer, Prosecco</li>
+            <li>Snacks (lunch not included)</li>
+            <li>~4 hours, up to 6 people</li>
+          </ul>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">After the Boat</div>
+          <h4>Lunch at Mezatorre Hotel</h4>
+          <p>Head to the <strong>Mezatorre Hotel &amp; Thermal Spa</strong> for a poolside lunch. Stunning clifftop views over the bay &mdash; the perfect way to close out a day on the water.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Evening</div>
+          <h4>Open Dinner Plan</h4>
+          <p>Last dinner on Ischia &mdash; dealer's choice. Pick from the <a href="restaurants.html" style="color: var(--terracotta);">restaurant guide</a> or go with what feels right.</p>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>Booking:</strong> Confirmation #1761034101 &middot; Reference #1378330681<br>
+        <strong>Times:</strong> 9:30 AM&ndash;1:30 PM or 2:30&ndash;6:30 PM &mdash; confirm with operator in advance<br>
+        <strong>Note:</strong> Stops can be customized. Cancelled with full refund if weather is bad.
+      </div>
+    </div>
+
+    <!-- Travel out folded in -->
+    <div class="travel-inline">
+      <div class="card-label">July 4 &middot; Travel to Venice</div>
+      <h3>Ferry + Italo Train</h3>
+      <ul>
+        <li>Morning ferry: Ischia &rarr; Naples</li>
+        <li><strong>Italo 8918</strong> &mdash; Departs Naples 1:35 PM, arrives Venice 6:42 PM (5h 07m, direct)</li>
+        <li>Carriage 2, Seats 15 &amp; 16</li>
+      </ul>
+      <div class="note-box">
+        <strong>Tip:</strong> Arrive at Napoli Centrale 45&ndash;60 minutes early for the train.
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== VENICE ==================== -->
+  <div class="photo-banner">
+    <img src="https://images.unsplash.com/photo-1514890547357-a9ee288728e0?w=1600&q=80" alt="Venice Grand Canal">
+    <div class="overlay"></div>
+  </div>
+
+  <section class="stop" id="venice">
+    <div class="stop-header">
+      <p class="stop-number">Stop 2</p>
+      <h2>Venice</h2>
+      <div class="divider"></div>
+      <div class="stop-meta">
+        <span>July 4 &ndash; July 6</span>
+        <span>2 nights</span>
+      </div>
+    </div>
+
+    <!-- Hotel info -->
+    <div class="hotel-card">
+      <div class="hotel-info">
+        <div class="hotel-label">Your Stay</div>
+        <h3>Hotel Flora</h3>
+        <div class="hotel-details">
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Address</span> San Marco 2283/A, 30124 Venice</div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Phone</span> <a href="tel:+390415205844">+39 041 520 5844</a></div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Email</span> <a href="mailto:info@hotelflora.it">info@hotelflora.it</a></div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Web</span> <a href="https://www.hotelflora.it" target="_blank">hotelflora.it</a></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Night 1 -->
+    <div class="card">
+      <div class="card-label">July 4 &middot; Arrival Night</div>
+      <h3>First Taste of Venice</h3>
+      <ul>
+        <li>Check in at Hotel Flora</li>
+        <li>Light dinner nearby</li>
+        <li>Wander Venice at night &mdash; this is important</li>
+      </ul>
+    </div>
+
+    <div class="photo-grid">
+      <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=800&q=80" alt="Venice canal with gondola">
+      <img src="https://images.unsplash.com/photo-1534113414509-0eec2bfb493f?w=800&q=80" alt="St. Mark's Square">
+    </div>
+
+    <!-- Main Day -->
+    <div class="card">
+      <div class="card-label">July 5 &middot; Main Venice Day</div>
+      <h3>Venice in a Day</h3>
+
+      <div class="day-timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">8:15 AM &mdash; Morning</div>
+          <h4>Walks of Italy Guided Tour</h4>
+          <p>4-hour guided experience covering Rialto Bridge & market, hidden streets & neighborhoods, a shared gondola ride (~30 min), St. Mark's Basilica (skip-the-line), and Doge's Palace (skip-the-line).</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">12:30 PM &mdash; Lunch</div>
+          <h4>Eat Away from St. Mark's</h4>
+          <p>Head slightly away from the tourist center for a more authentic meal.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">Afternoon</div>
+          <h4>Dorsoduro Walking Route</h4>
+          <p>Cross Accademia Bridge, wander quiet canals, head to Punta della Dogana for the viewpoint, stop for an aperitivo, then drift toward Rialto &mdash; avoiding main paths. Goal: get lost intentionally.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">Evening</div>
+          <h4>Dinner in Dorsoduro</h4>
+          <p>Relaxed dinner in the neighborhood you've been exploring.</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-time">10&ndash;11 PM &mdash; Night</div>
+          <h4>Venice After Dark</h4>
+          <p>Highly recommended: walk Venice late at night. Quiet, empty, surreal atmosphere &mdash; one of the most magical experiences in the city.</p>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>Don't forget:</strong> Bring ID for the Basilica. Dress with covered shoulders & knees.
+      </div>
+    </div>
+
+    <div class="photo-single">
+      <img src="https://images.unsplash.com/photo-1498307833015-e7b400441eb8?w=1200&q=80" alt="Venice at dusk">
+    </div>
+
+    <div class="card">
+      <span class="optional-tag">Optional</span>
+      <h3>Extras</h3>
+      <ul>
+        <li>Private gondola ride (romantic evening version)</li>
+        <li>St. Mark's Basilica Terrace (separate ticket, stunning views)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== DOLOMITES REGION ==================== -->
+  <div class="photo-banner" id="dolomites">
+    <img src="https://images.unsplash.com/photo-1707234287177-39914cab66f0?w=1600&q=80" alt="Dolomites mountain landscape">
+    <div class="overlay"></div>
+  </div>
+
+  <div class="region-header">
+    <p class="region-label">Stop 3</p>
+    <h2>The Dolomites</h2>
+    <div class="region-divider"></div>
+    <p class="region-dates">July 6 &ndash; July 11 &middot; 5 nights &middot; 3 stays</p>
+  </div>
+
+  <!-- TIERSER ALPL -->
+  <section class="sub-stop">
+    <div class="stop-header">
+      <p class="stop-number">Tierser Alpl</p>
+      <h2>The Adventure Night</h2>
+      <div class="divider"></div>
+      <div class="stop-meta">
+        <span>July 6 &ndash; July 7</span>
+        <span>1 night</span>
+      </div>
+    </div>
+
+    <div class="hotel-card">
+      <div class="hotel-info">
+        <div class="hotel-label">Your Stay</div>
+        <h3>Tierser Alpl Rifugio</h3>
+        <div class="hotel-details">
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Address</span> Ratzesweg 7, 39040 Seis, South Tyrol</div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Phone</span> <a href="tel:+390471727958">+39 0471 727 958</a></div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Email</span> <a href="mailto:info@tierseralpl.com">info@tierseralpl.com</a></div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Web</span> <a href="https://www.tierseralpl.com" target="_blank">tierseralpl.com</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="photo-grid">
+      <img src="https://images.unsplash.com/photo-1671644100365-61562d7298ad?w=800&q=80" alt="Seceda ridgeline Dolomites">
+      <img src="https://images.unsplash.com/photo-1630308460885-99b83cbf925b?w=800&q=80" alt="Val Gardena Dolomites">
+    </div>
+
+    <div class="card">
+      <div class="card-label">July 6 &middot; The Adventure</div>
+      <h3>Overnight in the Dolomites</h3>
+      <ul>
+        <li>Drive Venice &rarr; Nigerpass (~3&ndash;3.5 hours)</li>
+        <li>Start hike around 3&ndash;4 PM</li>
+        <li>Hike 2&ndash;3 hours up to the rifugio</li>
+        <li>Sunset from the mountains</li>
+        <li>Dinner & overnight (half board included)</li>
+      </ul>
+      <div class="note-box">
+        <strong>Pack light:</strong> Backpack only. Leave main luggage in the car. Bring layers & water.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">July 7 &middot; Epic Day</div>
+      <h3>Sunrise, Gardena Pass, Seceda & Santre</h3>
+      <div class="day-timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">~8:00 AM</div>
+          <h4>Sunrise & Hike Down</h4>
+          <p>Breakfast at the rifugio with mountain views, then hike back down to the car (1.5&ndash;2 hours).</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">~10:00 AM</div>
+          <h4>Passo Gardena</h4>
+          <p>Drive through Val Gardena and over Passo Gardena &mdash; one of the most stunning mountain passes in the Dolomites. Stop for photos at the top. Continue down to Ortisei (~1.5 hrs total).</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">~11:45 AM</div>
+          <h4>Seceda Cable Car & Ridgeline Hike</h4>
+          <p>Cable car up from Ortisei to the iconic Seceda ridgeline viewpoint. Walk along the ridge for stunning panoramic views &mdash; low effort, massive reward. Allow 2&ndash;3 hours total including the ride.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">~2:30 PM</div>
+          <h4>Drive to Santre</h4>
+          <p>Cable car back down, then drive from Ortisei to Santre (~45 min). Arrive mid-afternoon, check in, and decompress.</p>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>Big day but worth it:</strong> You'll see the best of the Dolomites in one incredible drive &mdash; mountain pass, cable car ridgeline, and arrive at your recovery spot by 3:30 PM.
+      </div>
+    </div>
+  </section>
+
+  <div class="sub-divider"><hr></div>
+
+  <!-- SANTRE -->
+  <section class="sub-stop">
+    <div class="stop-header">
+      <p class="stop-number">Santre</p>
+      <h2>Recovery & Spa</h2>
+      <div class="divider"></div>
+      <div class="stop-meta">
+        <span>July 7 &ndash; July 9</span>
+        <span>2 nights</span>
+      </div>
+    </div>
+
+    <div class="hotel-card">
+      <div class="hotel-info">
+        <div class="hotel-label">Your Stay</div>
+        <h3>Santre Dolomythic Home</h3>
+        <div class="hotel-details">
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Address</span> S. Andrea Via Centrale 19, 39042 Bressanone, South Tyrol</div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Phone</span> <a href="tel:+390472694979">+39 0472 694 979</a></div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Email</span> <a href="mailto:info@santre.it">info@santre.it</a></div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Web</span> <a href="https://www.santre.it" target="_blank">santre.it</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">July 8 &middot; The Vibe</div>
+      <h3>Spa, Slow Mornings & Great Food</h3>
+      <p>After the epic July 7 adventure (Gardena Pass, Seceda, and the drive in), this is your full recovery day. Sleep in, enjoy the spa, take it easy, and savor the included dinners. No agenda, no alarm.</p>
+    </div>
+  </section>
+
+  <div class="sub-divider"><hr></div>
+
+  <!-- MIRAMONTI -->
+  <section class="sub-stop">
+    <div class="stop-header">
+      <p class="stop-number">Merano</p>
+      <h2>The Grand Finale</h2>
+      <div class="divider"></div>
+      <div class="stop-meta">
+        <span>July 9 &ndash; July 11</span>
+        <span>2 nights</span>
+      </div>
+    </div>
+
+    <div class="hotel-card">
+      <div class="hotel-info">
+        <div class="hotel-label">Your Stay</div>
+        <h3>Miramonti Boutique Hotel</h3>
+        <div class="hotel-details">
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Address</span> Via S. Caterina 14, 39010 Avelengo / Merano, South Tyrol</div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Phone</span> <a href="tel:+390473279335">+39 0473 279 335</a></div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Email</span> <a href="mailto:info@hotel-miramonti.com">info@hotel-miramonti.com</a></div>
+          <div class="hotel-detail-row"><span class="hotel-detail-label">Web</span> <a href="https://www.hotel-miramonti.com" target="_blank">hotel-miramonti.com</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="photo-grid">
+      <img src="https://images.unsplash.com/photo-1701276934257-c70d95aecd76?w=800&q=80" alt="Merano town">
+      <img src="https://images.unsplash.com/photo-1689838413462-3be439f77b34?w=800&q=80" alt="Merano promenade">
+    </div>
+
+    <div class="card">
+      <div class="card-label">July 9 &middot; Explore Day</div>
+      <h3>Merano, the Castle & Gardens</h3>
+      <div class="day-timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">Morning</div>
+          <h4>Drive to Miramonti & Check In</h4>
+          <p>Leave Santre after breakfast and drive to Miramonti Boutique Hotel (~1 hr). Drop your bags and head into town.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Late Morning / Afternoon</div>
+          <h4>Gardens of Trauttmansdorff Castle</h4>
+          <p>Spend 2&ndash;3 hours exploring the stunning botanical gardens surrounding the castle. Over 80 garden landscapes from around the world, with panoramic views of the Merano valley.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Afternoon / Evening</div>
+          <h4>Merano Old Town</h4>
+          <p>Walk the promenade along the Passer River, explore the charming old town with its medieval arcades, and settle in for aperitivo followed by dinner.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">July 10 &middot; Relax Day</div>
+      <h3>Last Day in Italy</h3>
+      <p>No agenda. Sleep in, enjoy the Miramonti pool and spa, take a short walk in the hills above Avelengo, or just sit on the terrace with a glass of wine. Your last evening in Italy &mdash; savor it.</p>
+    </div>
+
+    <div class="travel-inline">
+      <div class="card-label">July 11 &middot; Departure</div>
+      <h3>Homeward</h3>
+      <ul>
+        <li>Drive back to Venice</li>
+        <li>Drop off rental car</li>
+        <li>Fly home</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Highlights -->
+  <section class="highlights">
+    <div class="highlights-inner">
+      <h2>Trip Highlights</h2>
+      <div class="highlights-grid">
+        <div class="highlight-item">
+          <div class="highlight-icon">&#127860;</div>
+          <p>Ischia spa & relaxation</p>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">&#127963;</div>
+          <p>Venice guided history & wandering</p>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">&#128347;</div>
+          <p>Gondola experience</p>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">&#127749;</div>
+          <p>Tierser Alpl sunset & sunrise</p>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">&#128739;</div>
+          <p>Passo Gardena scenic drive</p>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">&#9968;</div>
+          <p>Seceda ridgeline viewpoint</p>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">&#127807;</div>
+          <p>Santre spa & food</p>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">&#127802;</div>
+          <p>Merano botanical gardens</p>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">&#10024;</div>
+          <p>Miramonti luxury finish</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reminders -->
+  <section class="reminders">
+    <h2>Before You Go</h2>
+    <div class="reminder-grid">
+      <div class="reminder-item">
+        <span class="reminder-icon">&#128179;</span>
+        <p><strong>Bring ID</strong> for the Venice tour &mdash; required for Basilica entry</p>
+      </div>
+      <div class="reminder-item">
+        <span class="reminder-icon">&#127890;</span>
+        <p><strong>Pack light</strong> for the rifugio night &mdash; backpack only</p>
+      </div>
+      <div class="reminder-item">
+        <span class="reminder-icon">&#128506;</span>
+        <p><strong>Download offline maps</strong> before you leave</p>
+      </div>
+      <div class="reminder-item">
+        <span class="reminder-icon">&#128161;</span>
+        <p><strong>Don't over-schedule</strong> &mdash; keep flexibility and enjoy each other</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p class="names">Nick & Lizzy</p>
+    <p>Italy 2026</p>
+  </footer>
+
+  <script>
+    const stops = document.querySelectorAll('.stop, .sub-stop');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    stops.forEach(stop => observer.observe(stop));
+
+    const navSectionLinks = document.querySelectorAll('.nav-section-link');
+    const navSections = [
+      { id: 'ischia', el: document.querySelector('#ischia') },
+      { id: 'venice', el: document.querySelector('#venice') },
+      { id: 'dolomites', el: document.querySelector('#dolomites') }
+    ];
+    window.addEventListener('scroll', () => {
+      let current = '';
+      navSections.forEach(s => {
+        if (s.el && window.scrollY >= s.el.offsetTop - 100) {
+          current = s.id;
+        }
+      });
+      navSectionLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+    });
+  </script>
+</body>
+</html>

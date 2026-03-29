@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurant Guide - Nick & Lizzy's Italy Honeymoon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #faf8f4;
+      --warm: #f5f0e8;
+      --terracotta: #c4764e;
+      --navy: #2c3e50;
+      --gold: #c9a96e;
+      --gold-light: #e0c88a;
+      --text: #3a3530;
+      --text-light: #6b645c;
+      --shadow: rgba(60, 50, 40, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      background: var(--navy);
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .top-bar h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: white;
+    }
+
+    .top-bar h1 em { color: var(--gold-light); font-style: italic; }
+
+    .top-bar a {
+      color: var(--gold-light);
+      text-decoration: none;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid rgba(224, 200, 138, 0.25);
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .top-bar a:hover {
+      background: rgba(224, 200, 138, 0.1);
+      border-color: var(--gold-light);
+    }
+
+    /* Page header */
+    .page-header {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 1rem;
+      text-align: center;
+    }
+
+    .page-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    /* Location tabs */
+    .location-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .loc-tab {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.2rem;
+      border-radius: 25px;
+      border: 1.5px solid rgba(201, 169, 110, 0.3);
+      background: white;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.25s;
+      font-weight: 500;
+    }
+
+    .loc-tab:hover { border-color: var(--gold); }
+
+    .loc-tab.active {
+      background: var(--navy);
+      color: white;
+      border-color: var(--navy);
+    }
+
+    /* Location section */
+    .location-section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1.5rem 2rem;
+      display: none;
+    }
+
+    .location-section.visible { display: block; }
+
+    .section-header {
+      text-align: center;
+      padding: 1.5rem 0 0.5rem;
+    }
+
+    .section-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+    }
+
+    .section-header p {
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    .section-note {
+      background: rgba(196, 118, 78, 0.06);
+      border-left: 3px solid var(--gold);
+      padding: 0.75rem 1rem;
+      margin: 1rem 0;
+      font-size: 0.78rem;
+      color: var(--text-light);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .section-note strong { color: var(--terracotta); }
+
+    /* Area divider */
+    .area-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+      padding: 1.5rem 0 0.5rem;
+      border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+      margin-bottom: 0.75rem;
+    }
+
+    /* Restaurant card */
+    .rest-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.15rem 1.25rem;
+      margin-bottom: 0.6rem;
+      box-shadow: 0 1px 8px var(--shadow);
+      transition: transform 0.2s;
+    }
+
+    .rest-card:hover { transform: translateY(-2px); }
+
+    .rest-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .rest-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--navy);
+      line-height: 1.3;
+    }
+
+    .rest-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .rest-rating {
+      font-size: 0.72rem;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .rest-price {
+      font-size: 0.68rem;
+      color: var(--text-light);
+      background: var(--warm);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    .rest-type {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--terracotta);
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+    }
+
+    .rest-quote {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      font-style: italic;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+
+    .rest-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+      font-size: 0.73rem;
+      color: var(--text-light);
+    }
+
+    .rest-detail {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .rest-detail-icon {
+      font-size: 0.8rem;
+      color: var(--gold);
+    }
+
+    .rest-reserve {
+      display: inline-block;
+      margin-top: 0.6rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.75rem;
+      border: 1.5px solid var(--terracotta);
+      border-radius: 6px;
+      color: var(--terracotta);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .rest-reserve:hover {
+      background: var(--terracotta);
+      color: white;
+    }
+
+    .rest-detail a {
+      color: var(--terracotta);
+      text-decoration: none;
+    }
+
+    .rest-detail a:hover { text-decoration: underline; }
+
+    /* Cicchetti special section */
+    .cicchetti-section {
+      background: var(--warm);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+
+    .cicchetti-section h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+    }
+
+    .cicchetti-section > p {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      margin-bottom: 0.75rem;
+    }
+
+    .cicchetti-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .cicchetti-item {
+      background: white;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+
+    .cicchetti-item .rest-name { font-size: 0.9rem; }
+    .cicchetti-item .rest-type { margin-bottom: 0.2rem; }
+
+    .cicchetti-item p {
+      font-size: 0.73rem;
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem 3rem;
+      color: var(--text-light);
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 600px) {
+      .page-header h2 { font-size: 1.6rem; }
+      .location-tabs { flex-wrap: wrap; }
+      .cicchetti-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <h1>Nick & Lizzy &mdash; <em>Restaurant Guide</em></h1>
+    <a href="index.html">&larr; Back</a>
+  </div>
+
+  <div class="page-header">
+    <h2>Where to Eat</h2>
+    <p>Curated restaurant picks for each stop on the trip. Skipping nights where dinner is already included (Tierser Alpl & Santre).</p>
+  </div>
+
+  <div class="location-tabs">
+    <button class="loc-tab active" data-loc="ischia">Ischia</button>
+    <button class="loc-tab" data-loc="venice">Venice</button>
+    <button class="loc-tab" data-loc="merano">Merano</button>
+  </div>
+
+  <!-- ========== ISCHIA ========== -->
+  <div class="location-section visible" id="ischia-restaurants">
+    <div class="section-header">
+      <h3>Ischia</h3>
+      <p>June 30 &ndash; July 3 &middot; 4 dinner nights</p>
+    </div>
+
+    <div class="section-note">
+      <strong>Note:</strong> July 3rd lunch is at Mezatorre Hotel (poolside, after the boat tour). These are dinner options &mdash; mix and match across your nights.
+    </div>
+
+    <div class="area-label">Ischia Porto &mdash; closest to San Montano</div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Restaurant Auras</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.9</span>
+          <span class="rest-price">$$</span>
+        </div>
+      </div>
+      <div class="rest-type">Restaurant &middot; Lungomare Aragonese</div>
+      <div class="rest-quote">"Our waiter Giovanni was amazing and ensured our special meal was perfect."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Lungomare Aragonese, 26</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 12 PM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="http://www.aurasrestaurant.com/" target="_blank">aurasrestaurant.com</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 722 reviews</div>
+      </div>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Portobello Restaurant</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.7</span>
+          <span class="rest-price">$$</span>
+        </div>
+      </div>
+      <div class="rest-type">Restaurant &middot; Via Porto</div>
+      <div class="rest-quote">"The food was exceptional &mdash; fresh, flavorful, and beautifully presented."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Porto, 41 Riva Destra</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 10:30 AM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://social.quandoo.com/en/groups/portobello-restaurant-ischia-106576" target="_blank">quandoo.com (reservations)</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 1,356 reviews</div>
+      </div>
+      <a href="https://social.quandoo.com/en/groups/portobello-restaurant-ischia-106576" target="_blank" class="rest-reserve">Reserve a Table</a>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Pazziella Beach Bar & Restaurant</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.8</span>
+          <span class="rest-price">$$</span>
+        </div>
+      </div>
+      <div class="rest-type">Seafood &middot; Beach Restaurant</div>
+      <div class="rest-quote">"The handmade pasta was fantastic and the seafood was sooo fresh!"</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> IIIa Traversa De Rivaz, 25</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="http://www.pazziellabeachbarerestaurant.com/" target="_blank">pazziellabeachbarerestaurant.com</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 378 reviews</div>
+      </div>
+      <a href="http://www.pazziellabeachbarerestaurant.com/" target="_blank" class="rest-reserve">Reserve a Table</a>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Trattoriva (Sapori Ischitani)</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.7</span>
+          <span class="rest-price">&euro;20&ndash;30</span>
+        </div>
+      </div>
+      <div class="rest-type">Restaurant &middot; Via Porto</div>
+      <div class="rest-quote">"5/5 for service, food and atmosphere."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Porto, 52</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 12 PM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://instagram.com/trattoriva" target="_blank">instagram.com/trattoriva</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 785 reviews</div>
+      </div>
+      <a href="https://instagram.com/trattoriva" target="_blank" class="rest-reserve">Reserve a Table</a>
+    </div>
+
+    <div class="area-label">Lacco Ameno &mdash; Going Out Night (July 1)</div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Bar Franco</div>
+        <div class="rest-meta">
+          <span class="rest-price">$$</span>
+        </div>
+      </div>
+      <div class="rest-type">Bar &amp; Restaurant &middot; Via Roma</div>
+      <div class="rest-quote">Your Wednesday night out spot. Lively energy, good drinks, great for a fun evening in town.</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Roma, 94, Lacco Ameno</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128197;</span> Planned for July 1 (Wednesday night)</div>
+      </div>
+    </div>
+
+    <div class="area-label">Forio</div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Ristorante Core a Core</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.8</span>
+        </div>
+      </div>
+      <div class="rest-type">Restaurant &middot; Via Marina</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Marina, 15, Forio</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 12 PM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://facebook.com/ristorantecoreacore" target="_blank">facebook.com/ristorantecoreacore</a></div>
+      </div>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">NUMA Forio</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.9</span>
+        </div>
+      </div>
+      <div class="rest-type">Pizza &middot; Via Marina</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Marina, 13, Forio</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 6 PM (dinner only)</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://www.instagram.com/numa.forio" target="_blank">instagram.com/numa.forio</a></div>
+      </div>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Ristorante Cantine Pietratorcia</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.7</span>
+        </div>
+      </div>
+      <div class="rest-type">Restaurant &middot; Vineyard Setting</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Provinciale Panza, Contrada Cuotto, 401, Forio</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 11 AM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="http://www.ristorantepietratorcia.it/" target="_blank">ristorantepietratorcia.it</a></div>
+      </div>
+    </div>
+
+    <div class="area-label">Lacco Ameno</div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Le Stufe Osteria & Cucina</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.7</span>
+          <span class="rest-price">$$</span>
+        </div>
+      </div>
+      <div class="rest-type">Restaurant &middot; Corso Angelo Rizzoli</div>
+      <div class="rest-quote">"Delicious food, unique cuisine, and gracious service."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Corso Angelo Rizzoli, 210, Lacco Ameno</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 7 PM (dinner only)</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://www.facebook.com/lestufeischia/" target="_blank">facebook.com/lestufeischia</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 468 reviews</div>
+      </div>
+    </div>
+
+    <div class="area-label">Serrara Fontana &mdash; Wine Tasting (July 2)</div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Cantina Raustella</div>
+        <div class="rest-meta">
+          <span class="rest-price">Wine Tasting</span>
+        </div>
+      </div>
+      <div class="rest-type">Vineyard &amp; Winery &middot; Serrara Fontana</div>
+      <div class="rest-quote">Small family vineyard with incredible views and local Ischian wines. Thursday morning tasting before heading to Sant'Angelo.</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Lorenzo Fiore, 49d, Serrara Fontana</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://www.cantinaraustella.com/" target="_blank">cantinaraustella.com</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128197;</span> Planned for July 2 (Thursday morning)</div>
+      </div>
+    </div>
+
+    <div class="area-label">Sant'Angelo</div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Ristorante La Grotta da Fiore</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.8</span>
+          <span class="rest-price">&euro;10&ndash;20</span>
+        </div>
+      </div>
+      <div class="rest-type">Restaurant &middot; Via Epomeo</div>
+      <div class="rest-quote">"The food was exceptionally good, and the portions were generous."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Epomeo, 21, Sant'Angelo</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 9 AM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="http://www.epomeolagrotta.com/" target="_blank">epomeolagrotta.com</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 632 reviews</div>
+      </div>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Taverna Pietro Paolo Detto Stalino</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.7</span>
+          <span class="rest-price">&euro;20&ndash;30</span>
+        </div>
+      </div>
+      <div class="rest-type">Italian &middot; Spiaggia Dei Maronti</div>
+      <div class="rest-quote">"Great food, friendly and professional staff."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Spiaggia Dei Maronti, Via Iesca</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 11:30 AM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 671 reviews</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== VENICE ========== -->
+  <div class="location-section" id="venice-restaurants">
+    <div class="section-header">
+      <h3>Venice</h3>
+      <p>July 4 &ndash; July 5 &middot; 2 dinner nights + lunch</p>
+    </div>
+
+    <div class="section-note">
+      <strong>July 4 arrival:</strong> Keep it light &mdash; you'll arrive around 6:42 PM. Grab cicchetti or a casual dinner.<br>
+      <strong>July 5:</strong> Lunch away from St. Mark's, then a proper Dorsoduro dinner.
+    </div>
+
+    <div class="area-label">Dorsoduro &mdash; best for your July 5 dinner</div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Impronta Restaurant</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.8</span>
+          <span class="rest-price">$$</span>
+        </div>
+      </div>
+      <div class="rest-type">Modern Italian &middot; Dorsoduro</div>
+      <div class="rest-quote">"Amazing service and amazing food, the pork chop is the best we've ever had."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Sestiere Dorsoduro, 3815</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 12 PM (closed Sundays)</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://www.improntavenezia.com/" target="_blank">improntavenezia.com</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 4,277 reviews</div>
+      </div>
+      <a href="https://www.improntavenezia.com/" target="_blank" class="rest-reserve">Reserve a Table</a>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Hostaria Osottoosopra</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.8</span>
+          <span class="rest-price">$$</span>
+        </div>
+      </div>
+      <div class="rest-type">Local Cuisine &middot; Santa Croce</div>
+      <div class="rest-quote">"The ambiance was amazing, our waiter was fabulous, and the food was amazing."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Santa Croce, 164</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 12 PM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="http://osottoosopra.com/" target="_blank">osottoosopra.com</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 7,574 reviews</div>
+      </div>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Bakar&ograve;</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.7</span>
+          <span class="rest-price">&euro;20&ndash;30</span>
+        </div>
+      </div>
+      <div class="rest-type">Rustic Italian &middot; Dorsoduro</div>
+      <div class="rest-quote">"I had a wonderful evening, food, drinks and service were perfect."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Sestiere Dorsoduro, 3662</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 11 AM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="http://www.bakarovenezia.com/" target="_blank">bakarovenezia.com</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 5,993 reviews</div>
+      </div>
+      <a href="http://www.bakarovenezia.com/" target="_blank" class="rest-reserve">Reserve a Table</a>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Osteria Enoteca Ai Artisti</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.6</span>
+          <span class="rest-price">$$</span>
+        </div>
+      </div>
+      <div class="rest-type">Wine &amp; Dining &middot; Fondamenta Toletta</div>
+      <div class="rest-quote">"Amazing food, fantastic wine selection, and great service."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Fondamenta Toletta, 1169 abc</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 12:45 PM (closed Mondays)</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="http://www.enotecaartisti.com/" target="_blank">enotecaartisti.com</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 841 reviews</div>
+      </div>
+    </div>
+
+    <div class="area-label">Near Rialto &mdash; good for lunch on July 5</div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Al Gobbo di Rialto</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.6</span>
+          <span class="rest-price">&euro;20&ndash;30</span>
+        </div>
+      </div>
+      <div class="rest-type">Venetian &middot; San Polo</div>
+      <div class="rest-quote">"The service was amazing, food was top notch and all around amazing."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> San Polo, 649, Ruga Rialto</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 12 PM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://www.ristorantealgobbodirialto.it/" target="_blank">ristorantealgobbodirialto.it</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 1,627 reviews</div>
+      </div>
+      <a href="https://www.ristorantealgobbodirialto.it/" target="_blank" class="rest-reserve">Reserve a Table</a>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Ristorante San Silvestro</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.7</span>
+        </div>
+      </div>
+      <div class="rest-type">Seafood &middot; Rio Tera S. Silvestro</div>
+      <div class="rest-quote">"The service, food and ambiance are exactly what we were looking for."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Rio Tera S. Silvestro, 1022B</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 12 PM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://ristorantesansilvestro.it/" target="_blank">ristorantesansilvestro.it</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 2,461 reviews</div>
+      </div>
+      <a href="https://ristorantesansilvestro.it/" target="_blank" class="rest-reserve">Reserve a Table</a>
+    </div>
+
+    <div class="cicchetti-section">
+      <h4>Cicchetti Crawl</h4>
+      <p>Venice's version of tapas. Perfect for a casual July 4th arrival dinner or pre-dinner snacks. Hit 2&ndash;3 of these &mdash; small bites, great wine, low commitment.</p>
+      <div class="cicchetti-list">
+        <div class="cicchetti-item">
+          <div class="rest-name">Osteria Al Squero</div>
+          <div class="rest-type">&#9733; 4.7 &middot; Dorsoduro &middot; &euro;1&ndash;10</div>
+          <p>"Seriously great cicchetti, drinks, and good prices."</p>
+        </div>
+        <div class="cicchetti-item">
+          <div class="rest-name"><a href="http://www.cantinaschiavi.com/" target="_blank" style="color: var(--navy); text-decoration: none;">Cantine del Vino gi&agrave; Schiavi</a></div>
+          <div class="rest-type">&#9733; 4.7 &middot; Fondamenta Nani &middot; &euro;1&ndash;10</div>
+          <p>"Excellent cicchetti and very reasonable prices."</p>
+        </div>
+        <div class="cicchetti-item">
+          <div class="rest-name">Arcicchetti Bakaro</div>
+          <div class="rest-type">&#9733; 4.8 &middot; Campo dei Tolentini &middot; &euro;1&ndash;10</div>
+          <p>"Delicious cicchetti, good value, kind service, great vibes 10/10"</p>
+        </div>
+        <div class="cicchetti-item">
+          <div class="rest-name">Cantina Do Mori</div>
+          <div class="rest-type">&#9733; 4.4 &middot; Calle Do Mori &middot; &euro;10&ndash;20</div>
+          <p>"Very authentic cicchetti and great wines in a Venice backstreet."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MERANO ========== -->
+  <div class="location-section" id="merano-restaurants">
+    <div class="section-header">
+      <h3>Merano</h3>
+      <p>July 9 &ndash; July 10 &middot; 2 dinner nights</p>
+    </div>
+
+    <div class="section-note">
+      <strong>July 10</strong> is your last dinner in Italy. Make it count. Restaurant Schloss Rametz or Restaurant Trautmannsdorf are both excellent splurge options.
+    </div>
+
+    <div class="area-label">Merano Old Town</div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Restaurant Schloss Rametz</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.7</span>
+          <span class="rest-price">$$$</span>
+        </div>
+      </div>
+      <div class="rest-type">Mediterranean &amp; Alpine &middot; Castle Setting</div>
+      <div class="rest-quote">"Very creative and authentic Mediterranean &amp; Alpine cuisine."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Labers, 4</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 12 PM (closed Mondays)</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://www.rametz.com/de/restaurant/" target="_blank">rametz.com</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 492 reviews</div>
+      </div>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Restaurant Trautmannsdorf</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.7</span>
+          <span class="rest-price">$$$</span>
+        </div>
+      </div>
+      <div class="rest-type">South Tyrolean &middot; Elegant</div>
+      <div class="rest-quote">"Very good restaurant where Italian meets German kitchen."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via S. Valentino, 17</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 7 PM (closed Mondays)</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://www.trauti.it/" target="_blank">trauti.it</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 373 reviews</div>
+      </div>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Restaurant Festival</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.7</span>
+          <span class="rest-price">&euro;20&ndash;30</span>
+        </div>
+      </div>
+      <div class="rest-type">Restaurant &middot; Via Parrocchia</div>
+      <div class="rest-quote">"The best food, people, service and more in Merano."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Parrocchia, 2/a1</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 11 AM (closed Sundays)</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 184 reviews</div>
+      </div>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Bar Trattoria Mainardo</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.6</span>
+          <span class="rest-price">&euro;20&ndash;30</span>
+        </div>
+      </div>
+      <div class="rest-type">Italian &amp; Alpine &middot; Casual</div>
+      <div class="rest-quote">"When coming to Merano you NEED to eat here!!"</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Mainardo, 19</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 12 PM (closed Sundays)</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://m.facebook.com/pages/Trattoria-Mainardo/202374196616921" target="_blank">facebook.com (Trattoria Mainardo)</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 2,037 reviews</div>
+      </div>
+    </div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Trattoria Flora</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.5</span>
+          <span class="rest-price">$$</span>
+        </div>
+      </div>
+      <div class="rest-type">Italian &middot; Via Portici (historic arcades)</div>
+      <div class="rest-quote">"Great place to dine in Merano with a limited though excellent menu."</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via Portici, 75</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 11:45 AM (closed Mondays)</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="http://www.trattoriaflora.it/" target="_blank">trattoriaflora.it</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 1,346 reviews</div>
+      </div>
+    </div>
+
+    <div class="area-label">Avelengo (near Miramonti)</div>
+
+    <div class="rest-card">
+      <div class="rest-top">
+        <div class="rest-name">Bistro Mesner</div>
+        <div class="rest-meta">
+          <span class="rest-rating">&#9733; 4.5</span>
+          <span class="rest-price">&euro;10&ndash;20</span>
+        </div>
+      </div>
+      <div class="rest-type">Bistro &middot; Walking distance from Miramonti</div>
+      <div class="rest-details">
+        <div class="rest-detail"><span class="rest-detail-icon">&#128205;</span> Via alla Chiesa, 19, Avelengo</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#128340;</span> Opens 8 AM</div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#127760;</span> <a href="https://infobistromesner.wixsite.com/bistro-mesner" target="_blank">bistro-mesner (website)</a></div>
+        <div class="rest-detail"><span class="rest-detail-icon">&#9733;</span> 88 reviews</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Nick & Lizzy &middot; Italy 2026</p>
+  </footer>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.loc-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.loc-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.location-section').forEach(s => s.classList.remove('visible'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.loc + '-restaurants').classList.add('visible');
+      });
+    });
+  </script>
+</body>
+</html>

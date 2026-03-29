@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "honeymoon",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/nicksturm/Documents/Personal AI Files/honeymoon", "-l", "3456"],
+      "port": 3456
+    }
+  ]
+}

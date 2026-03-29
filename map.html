@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Map - Nick & Lizzy's Italy Honeymoon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --cream: #faf8f4;
+      --warm: #f5f0e8;
+      --terracotta: #c4764e;
+      --navy: #2c3e50;
+      --gold: #c9a96e;
+      --gold-light: #e0c88a;
+      --text: #3a3530;
+      --text-light: #6b645c;
+      --shadow: rgba(60, 50, 40, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top bar */
+    .top-bar {
+      background: var(--navy);
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .top-bar h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: white;
+    }
+
+    .top-bar h1 em {
+      color: var(--gold-light);
+      font-style: italic;
+    }
+
+    .top-bar a {
+      color: var(--gold-light);
+      text-decoration: none;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid rgba(224, 200, 138, 0.25);
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .top-bar a:hover {
+      background: rgba(224, 200, 138, 0.1);
+      border-color: var(--gold-light);
+    }
+
+
+    /* Main layout */
+    .main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 380px;
+      flex-shrink: 0;
+      background: var(--cream);
+      border-right: 1px solid rgba(201, 169, 110, 0.15);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem 1.5rem 1rem;
+      border-bottom: 1px solid rgba(201, 169, 110, 0.12);
+    }
+
+    .sidebar-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+    }
+
+    .sidebar-header p {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .route-summary {
+      padding: 0.75rem 1.5rem;
+      background: var(--warm);
+      display: flex;
+      gap: 1.25rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      color: var(--text-light);
+      border-bottom: 1px solid rgba(201, 169, 110, 0.12);
+    }
+
+    .route-summary .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .route-summary .stat-value {
+      font-weight: 500;
+      color: var(--navy);
+      font-size: 0.85rem;
+    }
+
+    /* Destination list */
+    .dest-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.75rem;
+    }
+
+    .dest-card {
+      background: white;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 1px 8px var(--shadow);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .dest-card:hover {
+      border-color: rgba(201, 169, 110, 0.3);
+      transform: translateX(3px);
+    }
+
+    .dest-card.active {
+      border-color: var(--terracotta);
+      box-shadow: 0 2px 16px rgba(196, 118, 78, 0.15);
+    }
+
+    .dest-card-top {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .dest-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .dest-card.active .dest-number {
+      background: var(--terracotta);
+    }
+
+    .dest-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .dest-dates {
+      font-size: 0.72rem;
+      color: var(--text-light);
+    }
+
+    .dest-card-body {
+      padding-left: 2.75rem;
+    }
+
+    .dest-hotel {
+      font-size: 0.78rem;
+      color: var(--terracotta);
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+
+    .dest-desc {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .dest-tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-top: 0.4rem;
+      font-weight: 500;
+    }
+
+    .tag-relax { background: rgba(107, 124, 94, 0.1); color: #6b7c5e; }
+    .tag-culture { background: rgba(44, 62, 80, 0.08); color: var(--navy); }
+    .tag-adventure { background: rgba(196, 118, 78, 0.1); color: var(--terracotta); }
+    .tag-recovery { background: rgba(201, 169, 110, 0.15); color: #8a7440; }
+
+    /* Travel connector */
+    .travel-connector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 0.75rem 0.3rem 2rem;
+      font-size: 0.68rem;
+      color: var(--text-light);
+    }
+
+    .travel-connector .line {
+      flex: 1;
+      height: 1px;
+      background: rgba(201, 169, 110, 0.3);
+    }
+
+    .travel-connector .mode {
+      white-space: nowrap;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    /* Map */
+    .map-container {
+      flex: 1;
+      position: relative;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Custom map markers */
+    .custom-marker {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      border: 2.5px solid white;
+      transition: all 0.3s ease;
+    }
+
+    .custom-marker.active {
+      background: var(--terracotta);
+      transform: scale(1.3);
+      z-index: 1000 !important;
+    }
+
+    /* Custom popup */
+    .leaflet-popup-content-wrapper {
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      padding: 0;
+    }
+
+    .leaflet-popup-content {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .popup-inner {
+      padding: 1rem 1.25rem;
+    }
+
+    .popup-inner h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+    }
+
+    .popup-inner p {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .popup-inner .popup-dates {
+      font-size: 0.7rem;
+      color: var(--terracotta);
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Legend */
+    .map-legend {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: white;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      z-index: 1000;
+      font-size: 0.7rem;
+      color: var(--text-light);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .legend-item:last-child { margin-bottom: 0; }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-line {
+      width: 20px;
+      height: 2px;
+      flex-shrink: 0;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .main {
+        flex-direction: column-reverse;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: 45vh;
+        border-right: none;
+        border-top: 1px solid rgba(201, 169, 110, 0.15);
+      }
+
+      .map-container {
+        height: 55vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <h1>Nick & Lizzy &mdash; <em>Italy 2026</em></h1>
+    <a href="index.html">&larr; Back</a>
+  </div>
+
+  <div class="main">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h2>Trip Map</h2>
+        <p>June 30 &ndash; July 11 &middot; 6 destinations</p>
+      </div>
+
+      <div class="route-summary">
+        <div class="stat">
+          <span>Total</span>
+          <span class="stat-value">11 nights</span>
+        </div>
+        <div class="stat">
+          <span>Region</span>
+          <span class="stat-value">Southern &rarr; Northern Italy</span>
+        </div>
+        <div class="stat">
+          <span>Distance</span>
+          <span class="stat-value">~900 km</span>
+        </div>
+      </div>
+
+      <div class="dest-list" id="destList">
+        <!-- Cards inserted by JS -->
+      </div>
+    </div>
+
+    <div class="map-container">
+      <div id="map"></div>
+      <div class="map-legend">
+        <div class="legend-item">
+          <span class="legend-dot" style="background: #2c3e50;"></span>
+          <span>Destination</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-line" style="background: #c4764e;"></span>
+          <span>Route</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-line" style="background: #c9a96e; border-top: 2px dashed #c9a96e; height: 0;"></span>
+          <span>Ferry</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const destinations = [
+      {
+        id: 1,
+        name: 'Ischia',
+        lat: 40.7300,
+        lng: 13.9010,
+        dates: 'June 30 - July 4',
+        nights: '4 nights',
+        hotel: 'San Montano Resort & Spa',
+        desc: 'Spa, pools, beach clubs & Italian dining. Your decompression phase.',
+        tag: 'Relax',
+        tagClass: 'tag-relax',
+        travel: null
+      },
+      {
+        id: 2,
+        name: 'Venice',
+        lat: 45.4408,
+        lng: 12.3155,
+        dates: 'July 4 - July 6',
+        nights: '2 nights',
+        hotel: 'Hotel Flora',
+        desc: 'Guided tour, gondola ride, Dorsoduro wandering & Venice after dark.',
+        tag: 'Culture',
+        tagClass: 'tag-culture',
+        travel: 'Ferry + High-Speed Train'
+      },
+      {
+        id: 3,
+        name: 'Tierser Alpl',
+        lat: 46.5050,
+        lng: 11.6050,
+        dates: 'July 6 - July 7',
+        nights: '1 night',
+        hotel: 'Tierser Alpl Rifugio',
+        desc: 'Hike up to a mountain rifugio for sunset, dinner & sunrise.',
+        tag: 'Adventure',
+        tagClass: 'tag-adventure',
+        travel: 'Drive ~3.5 hrs'
+      },
+      {
+        id: 4,
+        name: 'Seceda',
+        lat: 46.6013,
+        lng: 11.7278,
+        dates: 'July 7',
+        nights: 'Day stop',
+        hotel: 'Cable car from Ortisei',
+        desc: 'Cable car up to the iconic ridgeline viewpoint. Low effort, massive reward. On the way from Tierser Alpl to Santre via Passo Gardena.',
+        tag: 'Adventure',
+        tagClass: 'tag-adventure',
+        travel: 'Drive via Passo Gardena'
+      },
+      {
+        id: 5,
+        name: 'Santre',
+        lat: 46.7190,
+        lng: 11.6130,
+        dates: 'July 7 - July 9',
+        nights: '2 nights',
+        hotel: 'Santre Dolomythic Home',
+        desc: 'Recovery stop after the epic July 7 adventure. Spa, slow mornings & great food.',
+        tag: 'Recovery',
+        tagClass: 'tag-recovery',
+        travel: 'Drive ~45 min from Ortisei'
+      },
+      {
+        id: 6,
+        name: 'Merano',
+        lat: 46.6713,
+        lng: 11.1598,
+        dates: 'July 9 - July 11',
+        nights: '2 nights',
+        hotel: 'Miramonti Boutique Hotel',
+        desc: 'Botanical gardens, old town promenade & luxury hotel finale.',
+        tag: 'Explore',
+        tagClass: 'tag-recovery',
+        travel: 'Drive ~1 hr'
+      }
+    ];
+
+    // Build sidebar cards
+    const destList = document.getElementById('destList');
+    destinations.forEach((d, i) => {
+      if (d.travel) {
+        const connector = document.createElement('div');
+        connector.className = 'travel-connector';
+        connector.innerHTML = `<span class="line"></span><span class="mode">${d.travel}</span><span class="line"></span>`;
+        destList.appendChild(connector);
+      }
+
+      const card = document.createElement('div');
+      card.className = 'dest-card';
+      card.dataset.id = d.id;
+      card.innerHTML = `
+        <div class="dest-card-top">
+          <div class="dest-number">${d.id}</div>
+          <div>
+            <div class="dest-name">${d.name}</div>
+            <div class="dest-dates">${d.dates} &middot; ${d.nights}</div>
+          </div>
+        </div>
+        <div class="dest-card-body">
+          <div class="dest-hotel">${d.hotel}</div>
+          <div class="dest-desc">${d.desc}</div>
+          <span class="dest-tag ${d.tagClass}">${d.tag}</span>
+        </div>
+      `;
+      destList.appendChild(card);
+    });
+
+    // Initialize map
+    const map = L.map('map', {
+      zoomControl: false
+    }).setView([44.5, 12.5], 7);
+
+    L.control.zoom({ position: 'topright' }).addTo(map);
+
+    // Elegant map tiles
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Custom marker icon
+    function createIcon(number, isActive) {
+      return L.divIcon({
+        className: 'custom-marker-wrapper',
+        html: `<div class="custom-marker ${isActive ? 'active' : ''}">${number}</div>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -20]
+      });
+    }
+
+    // Add markers
+    const markers = {};
+    destinations.forEach(d => {
+      const marker = L.marker([d.lat, d.lng], {
+        icon: createIcon(d.id, false)
+      }).addTo(map);
+
+      marker.bindPopup(`
+        <div class="popup-inner">
+          <div class="popup-dates">${d.dates} &middot; ${d.nights}</div>
+          <h3>${d.name}</h3>
+          <p>${d.hotel}</p>
+          <p style="margin-top: 0.3rem;">${d.desc}</p>
+        </div>
+      `, { maxWidth: 250 });
+
+      markers[d.id] = marker;
+    });
+
+    // Draw route lines
+    const routeCoords = destinations.map(d => [d.lat, d.lng]);
+
+    // Ferry from Ischia to Naples (then train)
+    const ferryLine = L.polyline([
+      [destinations[0].lat, destinations[0].lng],
+      [40.8518, 14.2681] // Naples
+    ], {
+      color: '#c9a96e',
+      weight: 2.5,
+      dashArray: '8, 8',
+      opacity: 0.8
+    }).addTo(map);
+
+    // Train Naples to Venice
+    const trainLine = L.polyline([
+      [40.8518, 14.2681], // Naples
+      [destinations[1].lat, destinations[1].lng]
+    ], {
+      color: '#c4764e',
+      weight: 2.5,
+      opacity: 0.7
+    }).addTo(map);
+
+    // Drive routes (Venice -> Tierser -> Seceda -> Santre -> Merano)
+    for (let i = 1; i < destinations.length - 1; i++) {
+      L.polyline([
+        [destinations[i].lat, destinations[i].lng],
+        [destinations[i + 1].lat, destinations[i + 1].lng]
+      ], {
+        color: '#c4764e',
+        weight: 2.5,
+        opacity: 0.7
+      }).addTo(map);
+    }
+
+    // Return drive Merano -> Venice (departure)
+    L.polyline([
+      [destinations[5].lat, destinations[5].lng],
+      [destinations[1].lat, destinations[1].lng]
+    ], {
+      color: '#c4764e',
+      weight: 2,
+      dashArray: '6, 6',
+      opacity: 0.4
+    }).addTo(map);
+
+    // Fit map to all points plus Naples
+    const allPoints = [...routeCoords, [40.8518, 14.2681]];
+    map.fitBounds(allPoints, { padding: [40, 40] });
+
+    // Interactivity
+    let activeId = null;
+
+    function setActive(id) {
+      // Update cards
+      document.querySelectorAll('.dest-card').forEach(card => {
+        card.classList.toggle('active', parseInt(card.dataset.id) === id);
+      });
+
+      // Update markers
+      destinations.forEach(d => {
+        markers[d.id].setIcon(createIcon(d.id, d.id === id));
+      });
+
+      // Pan map
+      const dest = destinations.find(d => d.id === id);
+      if (dest) {
+        map.flyTo([dest.lat, dest.lng], 11, { duration: 0.8 });
+        markers[id].openPopup();
+      }
+
+      activeId = id;
+    }
+
+    // Card clicks
+    document.querySelectorAll('.dest-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = parseInt(card.dataset.id);
+        if (activeId === id) {
+          // Deselect - zoom back out
+          activeId = null;
+          document.querySelectorAll('.dest-card').forEach(c => c.classList.remove('active'));
+          destinations.forEach(d => markers[d.id].setIcon(createIcon(d.id, false)));
+          map.flyToBounds(allPoints, { padding: [40, 40], duration: 0.8 });
+          Object.values(markers).forEach(m => m.closePopup());
+        } else {
+          setActive(id);
+        }
+      });
+    });
+
+    // Marker clicks
+    destinations.forEach(d => {
+      markers[d.id].on('click', () => {
+        setActive(d.id);
+        // Scroll sidebar card into view
+        const card = document.querySelector(`.dest-card[data-id="${d.id}"]`);
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  </script>
+</body>
+</html>
